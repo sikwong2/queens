@@ -1,13 +1,11 @@
+#include "chess.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <assert.h>
 
-typedef struct Board{
-    char **grid;
-    uint32_t size;
-} Board;
+uint32_t solutions = 0;
 
 Board *board_create(uint32_t size){
     Board *board = (Board *)malloc(sizeof(Board));
@@ -33,8 +31,12 @@ void board_delete(Board *board){
     board = NULL;
 }
 
+uint32_t board_size(Board *board){
+    return board->size;
+}
+
 bool isValid(Board *board, uint32_t r, uint32_t c){
-    return board->grid[r][c] == 0;
+    return board->grid[r][c] != '.';
 }
 
 void placeQueen(Board *board, uint32_t r, uint32_t c){
@@ -48,14 +50,14 @@ void placeQueen(Board *board, uint32_t r, uint32_t c){
             if(r + n < board->size){
                 board->grid[r + n][c] = '.';
             }
-
+            
             //right diagonal
             if(r + n < board->size && c + n < board->size){
                 board->grid[r + n][c + n] = '.';
             }
 
             //left diagonal
-            if((r + n) < board->size && (c - n) >= 0){
+            if(r + n < board->size && c - n + board->size >= board->size){
                 board->grid[r + n][c - n] = '.';
             }
         }
@@ -70,42 +72,47 @@ void removeQueen(Board *board, uint32_t r, uint32_t c){
         for(uint32_t n = 1; n < board->size; n += 1){
             //vertical attack
             if(r + n < board->size){
-                board->grid[r + n][c] = '0';
+                board->grid[r + n][c] = 0;
             }
-
+            
             //right diagonal
             if(r + n < board->size && c + n < board->size){
-                board->grid[r + n][c + n] = '0';
+                board->grid[r + n][c + n] = 0;
             }
 
             //left diagonal
-            if(r + n < board->size && c - n > 0){
-                board->grid[r + n][c - n] = '0';
+            if(r + n < board->size && c - n + board->size >= board->size){
+                board->grid[r + n][c - n] = 0;
             }       
         }
+    }
+}
+
+void solveQueens(Board *board, uint32_t r){
+    if(r == board->size){
+        printBoard(board);
+        solutions += 1;
+        return;
+    }
+    for(uint32_t c = 0; c < board->size; c += 1){
+        if(isValid(board, r, c)){
+            placeQueen(board, r, c);
+            solveQueens(board, r + 1);
+            removeQueen(board, r, c);
+        }    
     }
 }
 
 void printBoard(Board *board){
     for(uint32_t r = 0; r < board->size; r += 1){
         for(uint32_t c = 0; c < board->size; c += 1){
-            if(board->grid[r][c] == 0){
-                printf(" ");
+            if(board->grid[r][c] != 0){
+                printf("%c ", board->grid[r][c]);
             } else {
-                printf("%c", board->grid[r][c]);
+                printf("  ");
             }
         }
         printf("\n");
     }
-}
-
-int main(void){
-    Board *chess = board_create(8);
-
-    placeQueen(chess, 0, 1);
-    chess->grid[1][0] = '.';
-
-    printBoard(chess);
-
-    return 0;
+    printf("\n");
 }

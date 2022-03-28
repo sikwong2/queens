@@ -1,11 +1,11 @@
 CC = CLANG
 CFLAGS = -g -Wall -Wextra -Werror -Wpedantic
 
-chess: chess.o
-	$(CC) -o chess chess.o
+queens: queens.o chess.o
+	$(CC) -o queens queens.o chess.o
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f queens *.o
+	rm -f chess *.o
