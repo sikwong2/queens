@@ -1,8 +1,8 @@
 CC = CLANG
 CFLAGS = -g -Wall -Wextra -Werror -Wpedantic
 
-queens: queens.o
-	$(CC) -o queens queens.o
+chess: chess.o
+	$(CC) -o chess chess.o
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
