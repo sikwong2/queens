@@ -36,11 +36,11 @@ uint32_t board_size(Board *board){
 }
 
 bool isValid(Board *board, uint32_t r, uint32_t c){
-    return board->grid[r][c] != '.';
+    return board->grid[r][c] == 0;
 }
 
 void placeQueen(Board *board, uint32_t r, uint32_t c){
-    if(board->grid[r][c] == 0){
+    if(isValid(board, r, c)){
         //set queen
         board->grid[r][c] = 'Q';
 
@@ -48,17 +48,17 @@ void placeQueen(Board *board, uint32_t r, uint32_t c){
         for(uint32_t n = 1; n < board->size; n += 1){
             //vertical attack
             if(r + n < board->size){
-                board->grid[r + n][c] = '.';
+                board->grid[r + n][c] -= 1;
             }
             
             //right diagonal
             if(r + n < board->size && c + n < board->size){
-                board->grid[r + n][c + n] = '.';
+                board->grid[r + n][c + n] -= 1;
             }
 
             //left diagonal
             if(r + n < board->size && c - n + board->size >= board->size){
-                board->grid[r + n][c - n] = '.';
+                board->grid[r + n][c - n] -= 1;
             }
         }
     }
@@ -72,17 +72,17 @@ void removeQueen(Board *board, uint32_t r, uint32_t c){
         for(uint32_t n = 1; n < board->size; n += 1){
             //vertical attack
             if(r + n < board->size){
-                board->grid[r + n][c] = 0;
+                board->grid[r + n][c] += 1;
             }
             
             //right diagonal
             if(r + n < board->size && c + n < board->size){
-                board->grid[r + n][c + n] = 0;
+                board->grid[r + n][c + n] += 1;
             }
 
             //left diagonal
             if(r + n < board->size && c - n + board->size >= board->size){
-                board->grid[r + n][c - n] = 0;
+                board->grid[r + n][c - n] += 1;
             }       
         }
     }
@@ -106,10 +106,10 @@ void solveQueens(Board *board, uint32_t r){
 void printBoard(Board *board){
     for(uint32_t r = 0; r < board->size; r += 1){
         for(uint32_t c = 0; c < board->size; c += 1){
-            if(board->grid[r][c] != 0){
-                printf("%c ", board->grid[r][c]);
+            if(board->grid[r][c] == 'Q'){
+                printf("Q ");
             } else {
-                printf("  ");
+                printf(". ");
             }
         }
         printf("\n");
