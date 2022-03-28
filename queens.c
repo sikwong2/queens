@@ -12,15 +12,11 @@ int main(int argc, char **argv){
             break;
         }
     }
-
     //create board
     Board *board = board_create(n);
     
-    
     solveQueens(board, 0);
     printf("An %dx%d board has %d solutions\n", n, n, solutions);
-    /*placeQueen(board, 0 , 3);
-    placeQueen(board, 0, 3);
-    printBoard(board);*/
+    
     return 0;
 }
