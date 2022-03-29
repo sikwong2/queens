@@ -17,6 +17,8 @@ int main(int argc, char **argv){
     
     solveQueens(board, 0);
     printf("An %dx%d board has %d solutions\n", n, n, solutions);
+
+    board_delete(board);
     
     return 0;
 }
